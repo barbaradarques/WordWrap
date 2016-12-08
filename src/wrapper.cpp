@@ -2,30 +2,30 @@
 
 using namespace std;
 
-void solve(vector<string> words, int line_width){
-	int i, j, k, n = words.size() - 1; // n = número de palavras
-	// assim como words, todos os demais vetores começam em 1
-	int opt[n+1], cost[n+1][n+1];
-	int parent[n+1]; // lista encadeada do caminho ótimo 
-	// ex.: parent[j] = i significa que a linha que começa em i termina em j
-
-	/*
+/*
 	Função de Recorrência:
 		opt[j] = min(opt[i-1] + cost[i][j]), para i variando entre 1 e j.
 	Onde:
 		opt[j] é o custo mínimo para um texto com as j primeiras palavras de "words"
 		cost[i][j] é o custo de uma linha iniciando na palavra i e terminando em j
-	*/
+*/
+
+void solve(vector<string> words, int line_width){
+	int i, j, k, n = words.size() - 1; // n = número de palavras
+	// assim como "words", todos os demais vetores começam em 1
+	int opt[n+1], cost[n+1][n+1];
+	int parent[n+1]; // lista encadeada do caminho ótimo 
+	// ex.: parent[j] = i significa que a linha ótima que termina em j começa em i
 
 	// preenche cost
 	for(i = 1; i <= n; ++i){
 		for(j = i; j <= n; ++j){
-			int filled = words[i].length(); // espaço preenchido na linha(no mínimo o tamanho da primeira palavra)
-			for(k = i + 1; k <= j; ++k){
-				filled += 1 + words[k].length(); // adiciona tamanho da palavra mais espaço entre a anterior a ela
+			int filled = j-i; // characteres preenchidos na linha (inicializado com o # de espaços)
+			for(k = i; k <= j; ++k){
+				filled += words[k].length(); // adiciona o espaço ocupado por cada palavra
 			}
-			if(filled > line_width){
-				cost[i][j] = INF; // inviabiliza a escolha dessa linha
+			if(filled > line_width){ 
+				cost[i][j] = INF; // inviabiliza a escolha dessas palavras
 			} else {
 				cost[i][j] = (line_width - filled) * (line_width - filled);
 			}	
@@ -45,16 +45,16 @@ void solve(vector<string> words, int line_width){
 	}
 
 	// imprime solução
-	int end = n;
+	int end = n; // final da linha
 	string solution = "";
-	while(end > 0) {
-		/* 
-			como percorre-se o vetor de trás pra frente,
-		 	cada palavra é adicionada na frente das já percorridas
-		*/
-		solution = words[end] + '\n' + solution; // a última palavra não tem espaço
+	/* 
+		como percorre-se o vetor de trás pra frente,
+	 	cada palavra nova é adicionada NA FRENTE das já percorridas("solution")
+	*/
+	while(end > 0){
+		solution = words[end] + '\n' + solution; // a última palavra da linha tem '\n' ao invés de espaço
 		for(i = end - 1; i >= parent[end]; --i){
-			solution = words[i] + " " + solution;
+			solution = words[i] + ' ' + solution;
 		}
 		end = parent[end] - 1;
 	}
