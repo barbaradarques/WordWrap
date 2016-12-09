@@ -10,5 +10,5 @@
 using namespace std;
 
 void solve(vector<string> words, int len);
-
+int costLine(int i, int j);
 #endif
