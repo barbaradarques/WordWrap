@@ -7,8 +7,15 @@
 
 #define INF 9999999; // valor muito grande aleatório
 
-using namespace std;
 
-void solve(vector<string> words, int len);
-int costLine(int i, int j);
+class Text{
+	private:
+		std::vector<std::string>& words_;
+		int line_width_;
+		int lineCost(int i, int j);
+	public:
+		Text(std::vector<std::string>& words, int line_width);
+		void solve();	
+};
+
 #endif

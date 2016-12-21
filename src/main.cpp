@@ -13,7 +13,7 @@ int main(int argc, char const *argv[]){
 	for(int i = 1; i <= n; ++i){ 
 		cin >> words[i];
 	}
-
-	solve(words, len);
+	Text txt(words, len);
+	txt.solve();
 	return 0;
 }
