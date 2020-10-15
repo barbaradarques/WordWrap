@@ -45,11 +45,12 @@
 using namespace std;
 
 int argparse(int *len, vector<string> *words, int argc, char *argv[]){
-	struct arg_str *text_ = arg_strn(NULL,NULL,NULL,0,1,"Texto a efetuar word wrap - coloque entre aspas duplas.");
-	struct arg_int *len_ = arg_int0("l","len",NULL,"Define tamanho das linhas finais.");
-	struct arg_lit *help_ = arg_litn("h", "help", 0, 1, "Mostra a ajuda e sai.");
+	struct arg_str *text_ = arg_strn(NULL,NULL,NULL,0,1,"Text to make word wrap - enclose it in double quotes.");
+	struct arg_int *len_ = arg_int0("l","len",NULL,"Sets length of lines after word wrap processing.");
+	struct arg_lit *help_ = arg_litn("h", "help", 0, 1, "Displays the help and exits.");
+	struct arg_lit *inline_ = arg_litn("i", "inline", 0, 1, "Text will be passed by input and not by argument. Only the last line can be empty.");
 	struct arg_end *end_ = arg_end(20);
-	void* argtable[] = {text_,len_,help_,end_};
+	void* argtable[] = {text_,len_,help_,inline_,end_};
 
     const char* progname = argv[0];
     int nerrors;
@@ -62,7 +63,7 @@ int argparse(int *len, vector<string> *words, int argc, char *argv[]){
     if(help_->count > 0){
         printf("Uso: %s", progname);
         arg_print_syntax(stdout,argtable,"\n");
-		cout << "Utilitario para aplicar word wrap a um texto." << endl;
+		cout << "Utility to apply word wrap to text." << endl;
         arg_print_glossary(stdout,argtable,"  %-25s %s\n");
         exitcode=0;
         goto exit;
@@ -72,7 +73,7 @@ int argparse(int *len, vector<string> *words, int argc, char *argv[]){
     if(nerrors > 0){
         /* Display the error details contained in the arg_end struct.*/
         arg_print_errors(stdout,end_,progname);
-        cout << "Tente '" << progname << " --help' para obter ajuda de como usar." << endl;
+        cout << "Tente '" << progname << " --help' for help on how to use." << endl;
         exitcode=1;
         goto exit;
 	}
@@ -88,21 +89,37 @@ int argparse(int *len, vector<string> *words, int argc, char *argv[]){
 	} else {
 		*len = len_->ival[0];
 	}
+    if(inline_->count > 0){
+		string line, lines;
+		do{
+			getline(std::cin, line);
+			lines += line;
+		}while(line.size()!=0);
+		split(lines, *words, ' ');
+	} else {
+		string text(text_->sval[0]);
+		split(text, *words, ' ');
+	}
+	words->insert(words->begin(),""	);
 
 	exit:
 	/* deallocate each non-null entry in argtable[] */
 	arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-
-	const string text(text_->sval[0]);
-	split(text, *words, ' ');
 
 	return exitcode;
 }
 
 size_t split(const std::string &txt, std::vector<std::string> &strs, char ch)
 {
-	//https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
-	//CC BY-SA 3.0
+	// by Baltasarq used under CC BY-SA 3.0
+	// Source: https://stackoverflow.com/posts/5888676/revisions
+	// Original page: https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
+	// License URL: https://creativecommons.org/licenses/by-sa/3.0/
+	// Baltasaq URL:
+	//  - https://stackoverflow.com/users/266978/baltasarq
+	//  - http://jbgarcia.webs.uvigo.es/
+	// As of October 15, 2020 at 15:40 (UTC-4)
+	// kept unchanged according to the original to that date.
 
     size_t pos = txt.find( ch );
     size_t initialPos = 0;
