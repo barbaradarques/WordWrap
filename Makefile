@@ -9,3 +9,5 @@ git:
 	git add --all
 	git commit -m "$m"
 	git push
+clean:
+	rm --recursive ./build/
