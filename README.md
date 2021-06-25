@@ -30,4 +30,5 @@ make
 ```
 
 # TroubleShooting
-if you need, you can install argtable3 directly from the official [repository](https://github.com/argtable/argtable3).
+ - if you need, you can install argtable3 directly from the official [repository](https://github.com/argtable/argtable3).
+ - you should see [WordWrap_py](https://github.com/AlexandroGonSan/WordWrap_py)
