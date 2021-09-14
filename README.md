@@ -32,3 +32,8 @@ make
 # TroubleShooting
  - if you need, you can install argtable3 directly from the official [repository](https://github.com/argtable/argtable3).
  - you should see [WordWrap_py](https://github.com/AlexandroGonSan/WordWrap_py)
+
+# WordWrap_py
+Solution to the Word Wrap problem.
+## Use
+ - `python3 ./wrapper.py --len 20 "Ready, code working and here is your first wrap text."`
